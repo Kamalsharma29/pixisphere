@@ -19,12 +19,23 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ photographers, onFilter }
   const [styles, setStyles] = useState<string[]>([]);
   const [city, setCity] = useState('');
 
-  // ✅ FIX: Use optional chaining and fallback to [] if styles is undefined
+  // ✅ SAFELY extract all styles using flatMap only if photographers is a valid array
   const allStyles = Array.from(
-    new Set(photographers.flatMap((p) => p.styles ?? []))
+    new Set(
+      Array.isArray(photographers)
+        ? photographers.flatMap((p) => Array.isArray(p.styles) ? p.styles : [])
+        : []
+    )
   );
 
-  const allCities = Array.from(new Set(photographers.map((p) => p.location)));
+  // ✅ SAFELY extract all cities
+  const allCities = Array.from(
+    new Set(
+      Array.isArray(photographers)
+        ? photographers.map((p) => p.location ?? '')
+        : []
+    )
+  );
 
   useEffect(() => {
     onFilter({ price, rating, styles, city });
