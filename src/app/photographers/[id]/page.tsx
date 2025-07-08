@@ -2,39 +2,70 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import Image from 'next/image';
 import InquiryModal from '@/components/InquiryModal';
 
-const PhotographerProfilePage = () => {
+interface Review {
+  name: string;
+  rating: number;
+  comment: string;
+  date: string;
+}
+
+interface Photographer {
+  id: number;
+  name: string;
+  location: string;
+  price: number;
+  rating: number;
+  styles: string[];
+  tags: string[];
+  bio: string;
+  profilePic: string;
+  portfolio: string[];
+  reviews: Review[];
+}
+
+export default function PhotographerProfilePage() {
   const { id } = useParams();
-  const [photographer, setPhotographer] = useState<any>(null);
+  const [photographer, setPhotographer] = useState<Photographer | null>(null);
   const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     const fetchPhotographer = async () => {
-      const res = await fetch(`http://localhost:3001/photographers/${id}`);
-      const data = await res.json();
-      setPhotographer(data);
+      try {
+        const res = await fetch('/data/photographers.json');
+        const data = await res.json();
+
+        const match = data.photographers.find((p: Photographer) => p.id === Number(id));
+        setPhotographer(match || null);
+      } catch (error) {
+        console.error('Failed to fetch photographer:', error);
+        setPhotographer(null);
+      }
     };
 
     if (id) fetchPhotographer();
   }, [id]);
 
-  if (!photographer) return <p className="p-6">Loading...</p>;
+  if (!photographer) {
+    return <div className="p-6">Photographer not found.</div>;
+  }
 
   return (
     <main className="p-6 max-w-4xl mx-auto bg-white rounded shadow">
       <h1 className="text-3xl font-bold mb-2">{photographer.name}</h1>
       <p className="text-gray-600 mb-4">{photographer.bio}</p>
 
-      <div className="mb-4">
-        <strong>Location:</strong> {photographer.location} <br />
-        <strong>Price:</strong> ₹{photographer.price} <br />
-        <strong>Rating:</strong> {photographer.rating}⭐
+      <div className="mb-4 space-y-1">
+        <p><strong>Location:</strong> {photographer.location}</p>
+        <p><strong>Price:</strong> ₹{photographer.price}</p>
+        <p><strong>Rating:</strong> {photographer.rating}⭐</p>
       </div>
 
       <div className="mb-4">
         <strong>Styles:</strong>{' '}
-        {photographer.styles.map((style: string) => (
+        {photographer.styles.map((style) => (
           <span key={style} className="inline-block bg-gray-200 rounded px-2 py-1 text-sm mr-2">
             {style}
           </span>
@@ -44,17 +75,26 @@ const PhotographerProfilePage = () => {
       <div className="mb-6">
         <h2 className="text-xl font-semibold mb-2">Gallery</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {photographer.portfolio.map((img: string, index: number) => (
-            <img key={index} src={img} alt="Portfolio" className="rounded shadow" />
+          {photographer.portfolio.map((img, index) => (
+            <Image
+              key={index}
+              src={img}
+              alt="Portfolio"
+              width={300}
+              height={200}
+              className="rounded shadow w-full object-cover"
+            />
           ))}
         </div>
       </div>
 
       <div className="mb-6">
         <h2 className="text-xl font-semibold mb-2">Reviews</h2>
-        {photographer.reviews.map((review: any, index: number) => (
-          <div key={index} className="mb-3 border-b pb-2">
-            <p className="font-semibold">{review.name} ({review.rating}⭐)</p>
+        {photographer.reviews.map((review, i) => (
+          <div key={i} className="mb-3 border-b pb-2">
+            <p className="font-semibold">
+              {review.name} ({review.rating}⭐)
+            </p>
             <p className="text-sm text-gray-600">{review.date}</p>
             <p>{review.comment}</p>
           </div>
@@ -62,8 +102,8 @@ const PhotographerProfilePage = () => {
       </div>
 
       <button
-        className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
         onClick={() => setOpenModal(true)}
+        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
       >
         Send Inquiry
       </button>
@@ -71,6 +111,6 @@ const PhotographerProfilePage = () => {
       <InquiryModal isOpen={openModal} onClose={() => setOpenModal(false)} />
     </main>
   );
-};
+}
 
-export default PhotographerProfilePage;
+

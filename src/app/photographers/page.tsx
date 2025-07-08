@@ -16,54 +16,62 @@ const CategoryListingPage = () => {
       try {
         const res = await fetch('/data/photographers.json');
         if (!res.ok) throw new Error('Failed to load data');
-
         const data = await res.json();
-        setAllPhotographers(data);
-        setFilteredPhotographers(data);
+
+        setAllPhotographers(data.photographers || []);
+        setFilteredPhotographers(data.photographers || []);
       } catch (err) {
         console.error('Error loading photographers:', err);
         setError(true);
-        setAllPhotographers([]);
-        setFilteredPhotographers([]);
       }
     };
+
     fetchPhotographers();
   }, []);
 
   const handleSearch = (query: string) => {
-    const searchText = query.toLowerCase();
+    const searchText = query.toLowerCase().trim();
+
+    if (!searchText) {
+      setFilteredPhotographers(allPhotographers);
+      return;
+    }
+
     const filtered = allPhotographers.filter((p) =>
       p.name.toLowerCase().includes(searchText) ||
       p.location.toLowerCase().includes(searchText) ||
-      p.tags.some((tag) => tag.toLowerCase().includes(searchText))
+      p.tags?.some((tag) => tag.toLowerCase().includes(searchText))
     );
+
     setFilteredPhotographers(filtered);
   };
 
   const handleFilter = (filters: {
-    price?: number;
+    maxPrice?: number;
     rating?: number;
-    styles: string[];
+    styles?: string[];
     city?: string;
   }) => {
+    const { maxPrice, rating, styles = [], city } = filters;
+
     let results = [...allPhotographers];
 
-    if (typeof filters.price !== 'undefined') {
-      results = results.filter((p) => p.price <= filters.price!);
+    if (maxPrice !== undefined) {
+      results = results.filter((p) => p.price <= maxPrice);
     }
 
-    if (typeof filters.rating !== 'undefined') {
-      results = results.filter((p) => p.rating >= filters.rating!);
+    if (rating !== undefined) {
+      results = results.filter((p) => p.rating >= rating);
     }
 
-    if (filters.styles.length > 0) {
+    if (styles.length > 0) {
       results = results.filter((p) =>
-        filters.styles.every((style) => p.styles?.includes(style))
+        styles.every((style) => p.styles?.includes(style))
       );
     }
 
-    if (filters.city) {
-      results = results.filter((p) => p.location === filters.city);
+    if (city) {
+      results = results.filter((p) => p.location === city);
     }
 
     setFilteredPhotographers(results);
@@ -79,8 +87,8 @@ const CategoryListingPage = () => {
         <div className="flex gap-6">
           <div className="hidden md:block">
             <FilterSidebar
-              onFilter={handleFilter}
               photographers={allPhotographers}
+              onFilter={handleFilter}
             />
           </div>
 
@@ -93,7 +101,7 @@ const CategoryListingPage = () => {
                 ))}
               </div>
             ) : (
-              <p className="text-gray-500">No photographers found.</p>
+              <p className="text-gray-500 mt-6">No photographers found.</p>
             )}
           </div>
         </div>
@@ -103,3 +111,4 @@ const CategoryListingPage = () => {
 };
 
 export default CategoryListingPage;
+

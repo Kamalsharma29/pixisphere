@@ -6,46 +6,36 @@ import { Photographer } from '@/types';
 interface FilterSidebarProps {
   photographers: Photographer[];
   onFilter: (filters: {
-    price?: number;
+    maxPrice?: number;
     rating?: number;
-    styles: string[];
+    styles?: string[];
     city?: string;
   }) => void;
 }
 
 const FilterSidebar: React.FC<FilterSidebarProps> = ({ photographers, onFilter }) => {
-  const [price, setPrice] = useState<number>();
+  const [maxPrice, setMaxPrice] = useState<number>(20000);
   const [rating, setRating] = useState<number>();
   const [styles, setStyles] = useState<string[]>([]);
   const [city, setCity] = useState('');
 
-  // ✅ SAFELY extract all styles using flatMap only if photographers is a valid array
   const allStyles = Array.from(
     new Set(
-      Array.isArray(photographers)
-        ? photographers.flatMap((p) => Array.isArray(p.styles) ? p.styles : [])
-        : []
+      photographers.flatMap((p) => Array.isArray(p.styles) ? p.styles : [])
     )
   );
 
-  // ✅ SAFELY extract all cities
   const allCities = Array.from(
-    new Set(
-      Array.isArray(photographers)
-        ? photographers.map((p) => p.location ?? '')
-        : []
-    )
+    new Set(photographers.map((p) => p.location ?? ''))
   );
 
   useEffect(() => {
-    onFilter({ price, rating, styles, city });
-  }, [price, rating, styles, city]);
+    onFilter({ maxPrice, rating, styles, city });
+  }, [maxPrice, rating, styles, city]);
 
   const handleStyleChange = (style: string) => {
     setStyles((prev) =>
-      prev.includes(style)
-        ? prev.filter((s) => s !== style)
-        : [...prev, style]
+      prev.includes(style) ? prev.filter((s) => s !== style) : [...prev, style]
     );
   };
 
@@ -56,11 +46,15 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ photographers, onFilter }
       <div className="mb-4">
         <label className="block text-sm font-medium mb-1">Max Price (₹)</label>
         <input
-          type="number"
-          value={price || ''}
-          onChange={(e) => setPrice(Number(e.target.value))}
-          className="w-full border rounded px-2 py-1"
+          type="range"
+          min={1000}
+          max={30000}
+          step={500}
+          value={maxPrice}
+          onChange={(e) => setMaxPrice(Number(e.target.value))}
+          className="w-full"
         />
+        <div className="text-sm text-gray-600">Up to ₹{maxPrice}</div>
       </div>
 
       <div className="mb-4">
@@ -115,3 +109,4 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ photographers, onFilter }
 };
 
 export default FilterSidebar;
+
