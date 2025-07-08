@@ -12,7 +12,7 @@ const CategoryListingPage = () => {
 
   useEffect(() => {
     const fetchPhotographers = async () => {
-      const res = await fetch('/data/photographers.json'); // update for deployment
+      const res = await fetch('/data/photographers.json'); // deployment-safe path
       const data = await res.json();
       setAllPhotographers(data);
       setFilteredPhotographers(data);
@@ -38,17 +38,20 @@ const CategoryListingPage = () => {
   }) => {
     let results = [...allPhotographers];
 
-    if (filters.price) {
-      results = results.filter((p) => p.price <= filters.price);
+    if (typeof filters.price !== 'undefined') {
+      results = results.filter((p) => p.price <= filters.price!);
     }
-    if (filters.rating) {
-      results = results.filter((p) => p.rating >= filters.rating);
+
+    if (typeof filters.rating !== 'undefined') {
+      results = results.filter((p) => p.rating >= filters.rating!);
     }
+
     if (filters.styles.length > 0) {
       results = results.filter((p) =>
         filters.styles.every((style) => p.styles.includes(style))
       );
     }
+
     if (filters.city) {
       results = results.filter((p) => p.location === filters.city);
     }
@@ -82,3 +85,4 @@ const CategoryListingPage = () => {
 };
 
 export default CategoryListingPage;
+
