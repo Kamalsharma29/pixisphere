@@ -99,6 +99,150 @@
           "date": "2024-09-10"
         }
       ]
+    },
+  {
+  "id": 6,
+  "name": "Pixel Perfect",
+  "location": "Pune",
+  "price": 8500,
+  "rating": 4.3,
+  "styles": ["Studio", "Candid"],
+  "tags": ["Wedding", "Family"],
+  "bio": "Capturing smiles and timeless portraits with creativity.",
+  "profilePic": "/images/pixelperfect.jpg",
+  "portfolio": ["/images/pixel1.jpg", "/images/pixel2.jpg"],
+  "reviews": [
+    {
+      "name": "Aarav",
+      "rating": 4.5,
+      "comment": "Great lighting and patient team.",
+      "date": "2024-08-18"
     }
+  ]
+},
+{
+  "id": 7,
+  "name": "Focus Frame Studio",
+  "location": "Jaipur",
+  "price": 9500,
+  "rating": 4.6,
+  "styles": ["Traditional", "Outdoor"],
+  "tags": ["Pre-wedding", "Couple"],
+  "bio": "Focused on every detail to frame your love story.",
+  "profilePic": "/images/focusframe.jpg",
+  "portfolio": ["/images/focus1.jpg", "/images/focus2.jpg"],
+  "reviews": [
+    {
+      "name": "Divya",
+      "rating": 5,
+      "comment": "Our pre-wedding shoot was magical.",
+      "date": "2024-10-02"
+    }
+  ]
+},
+{
+  "id": 8,
+  "name": "Flash Moments",
+  "location": "Ahmedabad",
+  "price": 6000,
+  "rating": 4.0,
+  "styles": ["Studio"],
+  "tags": ["Birthday", "Baby"],
+  "bio": "Flash your best moments with high clarity.",
+  "profilePic": "/images/flashmoments.jpg",
+  "portfolio": ["/images/flash1.jpg", "/images/flash2.jpg"],
+  "reviews": [
+    {
+      "name": "Ritu",
+      "rating": 3.8,
+      "comment": "Budget-friendly and decent shots.",
+      "date": "2024-07-22"
+    }
+  ]
+},
+{
+  "id": 9,
+  "name": "Wedding Shutter",
+  "location": "Kolkata",
+  "price": 18000,
+  "rating": 4.9,
+  "styles": ["Candid", "Traditional"],
+  "tags": ["Wedding", "Event"],
+  "bio": "Luxury wedding stories, told frame by frame.",
+  "profilePic": "/images/weddingshutter.jpg",
+  "portfolio": ["/images/wedshut1.jpg", "/images/wedshut2.jpg"],
+  "reviews": [
+    {
+      "name": "Sayan",
+      "rating": 5,
+      "comment": "Incredible storytelling with every shot.",
+      "date": "2025-02-14"
+    }
+  ]
+},
+{
+  "id": 10,
+  "name": "Golden Clicks",
+  "location": "Chandigarh",
+  "price": 7500,
+  "rating": 4.1,
+  "styles": ["Outdoor"],
+  "tags": ["Kids", "Birthday"],
+  "bio": "Bright colors and golden memories captured forever.",
+  "profilePic": "/images/goldenclicks.jpg",
+  "portfolio": ["/images/golden1.jpg", "/images/golden2.jpg"],
+  "reviews": [
+    {
+      "name": "Mehak",
+      "rating": 4.2,
+      "comment": "Loved the cheerful backgrounds.",
+      "date": "2024-06-20"
+    }
+  ]
+},
+{
+  "id": 11,
+  "name": "Candid Kings",
+  "location": "Bhopal",
+  "price": 12000,
+  "rating": 4.5,
+  "styles": ["Candid"],
+  "tags": ["Maternity", "Engagement"],
+  "bio": "Capturing you as you are — naturally and beautifully.",
+  "profilePic": "/images/candidkings.jpg",
+  "portfolio": ["/images/candid1.jpg", "/images/candid2.jpg"],
+  "reviews": [
+    {
+      "name": "Raghav",
+      "rating": 4.7,
+      "comment": "Felt super comfortable during the shoot.",
+      "date": "2024-12-05"
+    }
+  ]
+},
+{
+  "id": 12,
+  "name": "Dream Frame",
+  "location": "Lucknow",
+  "price": 11000,
+  "rating": 4.4,
+  "styles": ["Studio", "Candid"],
+  "tags": ["Couple", "Portrait"],
+  "bio": "Turn your dreamy moments into elegant frames.",
+  "profilePic": "/images/dreamframe.jpg",
+  "portfolio": ["/images/dream1.jpg", "/images/dream2.jpg"],
+  "reviews": [
+    {
+      "name": "Sneha",
+      "rating": 4.6,
+      "comment": "Soft tones and great directions!",
+      "date": "2025-01-10"
+    }
+  ]
+}
+
+
+
+
   ]
 }

@@ -42,7 +42,7 @@ export default function Home() {
           className="w-full"
         >
           <Image
-            src="/images/landing.jpg"
+            src="/images/landing1.jpg"
             alt="Photographer shooting"
             width={600}
             height={400}
