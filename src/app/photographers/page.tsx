@@ -4,14 +4,15 @@ import { useState, useEffect } from 'react';
 import PhotographerCard from '@/components/PhotographerCard';
 import SearchBar from '@/components/SearchBar';
 import FilterSidebar from '@/components/FilterSidebar';
+import { Photographer } from '@/types';
 
 const CategoryListingPage = () => {
-  const [allPhotographers, setAllPhotographers] = useState([]);
-  const [filteredPhotographers, setFilteredPhotographers] = useState([]);
+  const [allPhotographers, setAllPhotographers] = useState<Photographer[]>([]);
+  const [filteredPhotographers, setFilteredPhotographers] = useState<Photographer[]>([]);
 
   useEffect(() => {
     const fetchPhotographers = async () => {
-      const res = await fetch('http://localhost:3001/photographers');
+      const res = await fetch('/data/photographers.json'); // update for deployment
       const data = await res.json();
       setAllPhotographers(data);
       setFilteredPhotographers(data);
@@ -21,16 +22,20 @@ const CategoryListingPage = () => {
 
   const handleSearch = (query: string) => {
     const searchText = query.toLowerCase();
-    const filtered = allPhotographers.filter(
-      (p) =>
-        p.name.toLowerCase().includes(searchText) ||
-        p.location.toLowerCase().includes(searchText) ||
-        p.tags.some((tag: string) => tag.toLowerCase().includes(searchText))
+    const filtered = allPhotographers.filter((p) =>
+      p.name.toLowerCase().includes(searchText) ||
+      p.location.toLowerCase().includes(searchText) ||
+      p.tags.some((tag) => tag.toLowerCase().includes(searchText))
     );
     setFilteredPhotographers(filtered);
   };
 
-  const handleFilter = (filters: any) => {
+  const handleFilter = (filters: {
+    price?: number;
+    rating?: number;
+    styles: string[];
+    city?: string;
+  }) => {
     let results = [...allPhotographers];
 
     if (filters.price) {
@@ -41,7 +46,7 @@ const CategoryListingPage = () => {
     }
     if (filters.styles.length > 0) {
       results = results.filter((p) =>
-        filters.styles.every((style: string) => p.styles.includes(style))
+        filters.styles.every((style) => p.styles.includes(style))
       );
     }
     if (filters.city) {
