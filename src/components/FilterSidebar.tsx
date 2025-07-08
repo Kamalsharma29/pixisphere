@@ -1,104 +1,97 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Photographer } from '@/types';
 
-interface FilterProps {
-  onFilter: (filters: any) => void;
-  photographers: any[];
+interface FilterSidebarProps {
+  photographers: Photographer[];
+  onFilter: (filters: {
+    price?: number;
+    rating?: number;
+    styles: string[];
+    city?: string;
+  }) => void;
 }
 
-const FilterSidebar: React.FC<FilterProps> = ({ onFilter, photographers }) => {
-  const [price, setPrice] = useState(20000); // max range
-  const [rating, setRating] = useState<number | null>(null);
+const FilterSidebar: React.FC<FilterSidebarProps> = ({ photographers, onFilter }) => {
+  const [price, setPrice] = useState<number>();
+  const [rating, setRating] = useState<number>();
   const [styles, setStyles] = useState<string[]>([]);
   const [city, setCity] = useState('');
 
-  const allStyles = Array.from(new Set(photographers.flatMap((p) => p.styles)));
+  // ✅ FIX: Use optional chaining and fallback to [] if styles is undefined
+  const allStyles = Array.from(
+    new Set(photographers.flatMap((p) => p.styles ?? []))
+  );
+
   const allCities = Array.from(new Set(photographers.map((p) => p.location)));
 
   useEffect(() => {
     onFilter({ price, rating, styles, city });
   }, [price, rating, styles, city]);
 
-  const toggleStyle = (style: string) => {
+  const handleStyleChange = (style: string) => {
     setStyles((prev) =>
-      prev.includes(style) ? prev.filter((s) => s !== style) : [...prev, style]
+      prev.includes(style)
+        ? prev.filter((s) => s !== style)
+        : [...prev, style]
     );
   };
 
   return (
-    <div className="bg-white p-4 rounded shadow w-full max-w-xs">
-      <h3 className="text-lg font-semibold mb-3">Filters</h3>
+    <aside className="bg-white p-4 rounded-lg shadow-md w-64">
+      <h2 className="text-lg font-semibold mb-4">Filters</h2>
 
-      {/* Price Range */}
       <div className="mb-4">
-        <label className="block text-sm font-medium">Max Price: ₹{price}</label>
+        <label className="block text-sm font-medium mb-1">Max Price (₹)</label>
         <input
-          type="range"
-          min={5000}
-          max={20000}
-          step={1000}
-          value={price}
+          type="number"
+          value={price || ''}
           onChange={(e) => setPrice(Number(e.target.value))}
-          className="w-full"
+          className="w-full border rounded px-2 py-1"
         />
       </div>
 
-      {/* Rating */}
       <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">Rating</label>
-        {[4, 3].map((r) => (
-          <label key={r} className="block text-sm">
-            <input
-              type="radio"
-              name="rating"
-              value={r}
-              checked={rating === r}
-              onChange={() => setRating(r)}
-              className="mr-2"
-            />
-            {r}+
-          </label>
-        ))}
-        <label className="block text-sm">
-          <input
-            type="radio"
-            name="rating"
-            value=""
-            checked={rating === null}
-            onChange={() => setRating(null)}
-            className="mr-2"
-          />
-          All Ratings
-        </label>
+        <label className="block text-sm font-medium mb-1">Minimum Rating</label>
+        <select
+          value={rating || ''}
+          onChange={(e) => setRating(Number(e.target.value))}
+          className="w-full border rounded px-2 py-1"
+        >
+          <option value="">Any</option>
+          {[5, 4, 3, 2, 1].map((r) => (
+            <option key={r} value={r}>
+              {r}+ stars
+            </option>
+          ))}
+        </select>
       </div>
 
-      {/* Styles */}
       <div className="mb-4">
         <label className="block text-sm font-medium mb-1">Styles</label>
-        {allStyles.map((style) => (
-          <label key={style} className="block text-sm">
-            <input
-              type="checkbox"
-              value={style}
-              checked={styles.includes(style)}
-              onChange={() => toggleStyle(style)}
-              className="mr-2"
-            />
-            {style}
-          </label>
-        ))}
+        <div className="flex flex-wrap gap-2">
+          {allStyles.map((style) => (
+            <label key={style} className="text-sm flex items-center gap-1">
+              <input
+                type="checkbox"
+                checked={styles.includes(style)}
+                onChange={() => handleStyleChange(style)}
+              />
+              {style}
+            </label>
+          ))}
+        </div>
       </div>
 
-      {/* City */}
       <div>
         <label className="block text-sm font-medium mb-1">City</label>
         <select
-          className="w-full border p-2 rounded"
           value={city}
           onChange={(e) => setCity(e.target.value)}
+          className="w-full border rounded px-2 py-1"
         >
-          <option value="">All Cities</option>
+          <option value="">All</option>
           {allCities.map((c) => (
             <option key={c} value={c}>
               {c}
@@ -106,7 +99,7 @@ const FilterSidebar: React.FC<FilterProps> = ({ onFilter, photographers }) => {
           ))}
         </select>
       </div>
-    </div>
+    </aside>
   );
 };
 
